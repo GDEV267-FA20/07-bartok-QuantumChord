@@ -5,9 +5,9 @@ using UnityEngine;
 //The SlotDef class is not a subclass of MonoBehaviour, so it does not need
 //a separate C# file.
 
-[System.Serializable]
+//[System.Serializable]
 
-public class SlotDef
+/*public class SlotDef
 {
     public float x;
 
@@ -27,7 +27,7 @@ public class SlotDef
 
     public Vector2 stagger;
 }
-
+*/
 public class Layout : MonoBehaviour
 {
 
