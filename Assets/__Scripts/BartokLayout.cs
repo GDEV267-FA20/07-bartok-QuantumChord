@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//The SlotDef class is not a subclass of MonoBehaviour, so it does not need
-//a separate C# file.
-
 [System.Serializable]
 
 public class SlotDef
@@ -19,18 +16,21 @@ public class SlotDef
 
     public int layerID = 0;
 
-    public int id;
-
     public List<int> hiddenBy = new List<int>();
+
+    public float rot;
 
     public string type = "slot";
 
     public Vector2 stagger;
+
+    public int player;
+
+    public Vector3 pos;
 }
 
-public class Layout : MonoBehaviour
+public class BartokLayout : MonoBehaviour
 {
-
     public PT_XMLReader xmlr;
 
     public PT_XMLHashtable xml;
@@ -45,12 +45,10 @@ public class Layout : MonoBehaviour
 
     public SlotDef discardPile;
 
-    //Ths holds all the possible names for the layers set by layerID
+    public SlotDef target;
 
-    public string[] sortingLayerNames = new string[] {"Row0","Row1",
-                                    "Row2","Row3","Discard", "Draw"};
+    //Bartok calls this method to read in the BartokLayoutXML.xml file
 
-    //This function is called to read in the LayoutXML.xml file
     public void ReadLayout(string xmlText)
     {
         xmlr = new PT_XMLReader();
@@ -69,55 +67,48 @@ public class Layout : MonoBehaviour
 
         SlotDef tSD;
 
-        //slotsX is used as a shortcut to all the <slot>s
+        //slotsX is used as a shortcut to all the <slot>s.
 
         PT_XMLHashList slotsX = xml["slot"];
 
-        for (int i = 0; i < slotsX.Count; i++)
+        for (int i = 0; i<slotsX.Count; i++)
         {
             tSD = new SlotDef();
 
             if (slotsX[i].HasAtt("type"))
             {
-                //If this <slot> has a type attribute, parse it.
+                //If this <slot> has a type attribute parse it
+
                 tSD.type = slotsX[i].att("type");
             }
+
             else
             {
-                //If not, set its type to "slot"; it's a card in the rows.
+                //If not, set its type to "slot"; it's a card in the rows
+
                 tSD.type = "slot";
             }
 
-            //Various attributes are passed into numerical values
+            //Various attributes are parsed into numerical values
 
             tSD.x = float.Parse(slotsX[i].att("x"));
 
             tSD.y = float.Parse(slotsX[i].att("y"));
 
+            tSD.pos = new Vector3(tSD.x * multiplier.x, tSD.y * multiplier.y, 0);
+
+            //Sorting Layers
+
             tSD.layerID = int.Parse(slotsX[i].att("layer"));
 
-            //This converts the number of layerID into a text layerName
+            tSD.layerName = tSD.layerID.ToString();
 
-            tSD.layerName = sortingLayerNames[tSD.layerID];
+            //Pull additional attributes based on the type of each <slot>
 
             switch (tSD.type)
             {
-                //Pull additional atttributes based on the type of this <slot>
                 case "slot":
-                    tSD.faceUp = (slotsX[i].att("faceup") == "1");
-
-                    tSD.id = int.Parse(slotsX[i].att("id"));
-
-                    if (slotsX[i].HasAtt("hiddenby"))
-                    {
-                        string[] hiding = slotsX[i].att("hiddenby").Split(',');
-
-                        foreach (string s in hiding)
-                        {
-                            tSD.hiddenBy.Add(int.Parse(s));
-                        }
-                    }
-                    slotDefs.Add(tSD);
+                    //ignore slots that are just of the "slot" type
 
                     break;
 
@@ -128,8 +119,22 @@ public class Layout : MonoBehaviour
 
                     break;
 
-                case "discarpile":
+                case "discardpile":
                     discardPile = tSD;
+
+                    break;
+
+                case "target":
+                    target = tSD;
+
+                    break;
+
+                case "hand":
+                    tSD.player = int.Parse(slotsX[i].att("player"));
+
+                    tSD.rot = float.Parse(slotsX[i].att("rot"));
+
+                    slotDefs.Add(tSD);
 
                     break;
             }
