@@ -16,9 +16,9 @@ public class SlotDef
 
     public int layerID = 0;
 
-    public List<int> hiddenBy = new List<int>();
-
     public int id;
+
+    public List<int> hiddenBy = new List<int>();
 
     public float rot;
 
