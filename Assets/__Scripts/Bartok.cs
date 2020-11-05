@@ -25,7 +25,7 @@ public class Bartok : MonoBehaviour
 
     private BartokLayout layout;
 
-    private Transform layourAnchor;
+    private Transform layoutAnchor;
 
     void Awake()
     {

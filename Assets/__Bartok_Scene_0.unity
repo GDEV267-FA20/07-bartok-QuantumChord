@@ -758,7 +758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deckXML: {fileID: 4900000, guid: c76312a0fb08948699e1abf935e4a957, type: 3}
-  layoutXML: {fileID: 0}
+  layoutXML: {fileID: 4900000, guid: e7ac453345f1ec14a99ad0d5c67bae0d, type: 3}
   layoutCenter: {x: 0, y: 0, z: 0}
   deck: {fileID: 0}
   drawPile: []
