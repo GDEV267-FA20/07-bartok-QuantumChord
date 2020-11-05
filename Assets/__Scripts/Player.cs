@@ -46,6 +46,10 @@ public class Player
             // every round, it isn't a problem.
         }
 
+        eCB.SetSortingLayerName("10");
+
+        eCB.eventualSortLayer = handSlotDef.layerName;
+
         FanHand();
 
         return(eCB);
@@ -116,7 +120,10 @@ public class Player
             hand[i].faceUp = (type == PlayerType.human);
 
             //Set the SortOrder of the cards so that they overlap properly
-            hand[i].SetSortOrder(i * 4);
+
+            hand[i].eventualSortOrder = 1 * 4;
+
+            //hand[i].SetSortOrder(i * 4);
 
         }
     }

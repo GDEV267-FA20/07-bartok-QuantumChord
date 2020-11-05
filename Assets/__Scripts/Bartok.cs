@@ -164,7 +164,31 @@ public class Bartok : MonoBehaviour
 
         tCB.faceUp = true;
 
+        tCB.SetSortingLayerName("10");
+
+        tCB.eventualSortLayer = layout.target.layerName;
+
+        if(targetCard != null)
+        {
+            MoveToDiscard(targetCard);
+        }
+
         targetCard = tCB;
+
+        return (tCB);
+    }
+
+    public CardBartok MoveToDiscard(CardBartok tCB)
+    {
+        tCB.state = CBState.discard;
+
+        discardPile.Add(tCB);
+
+        tCB.SetSortingLayerName(layout.discardPile.layerName);
+
+        tCB.SetSortOrder(discardPile.Count * 4);
+
+        tCB.transform.localPosition = layout.discardPile.pos + Vector3.back / 2;
 
         return (tCB);
     }
