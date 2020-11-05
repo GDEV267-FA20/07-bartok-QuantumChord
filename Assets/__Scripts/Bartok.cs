@@ -15,6 +15,8 @@ public class Bartok : MonoBehaviour
 
     public Vector3 layoutCenter = Vector3.zero;
 
+    public float handFanDegrees = 10f;
+
     [Header("Set Dynamically")]
 
     public Deck deck;
@@ -22,6 +24,10 @@ public class Bartok : MonoBehaviour
     public List<CardBartok> drawPile;
 
     public List<CardBartok> discardPile;
+
+    public List<Player> players;
+
+    public CardBartok targetCard;
 
     private BartokLayout layout;
 
@@ -45,6 +51,8 @@ public class Bartok : MonoBehaviour
         layout.ReadLayout(layoutXML.text);
 
         drawPile = UpgradeCardsList(deck.cards);
+
+        LayoutGame();
     }
 
     List<CardBartok> UpgradeCardsList(List<Card> lCD)
@@ -56,5 +64,94 @@ public class Bartok : MonoBehaviour
             lCB.Add(tCD as CardBartok);
         }
         return (lCB);
+    }
+
+    //Position all the cards in the drawPile properly
+    public void ArrangeDrawPile()
+    {
+        CardBartok tCB;
+
+        for (int i = 0; i<drawPile.Count; i++)
+        {
+            tCB = drawPile[i];
+
+            tCB.transform.SetParent(layoutAnchor);
+
+            tCB.transform.localPosition = layout.drawPile.pos;
+
+            //Rotation should start at 0
+
+            tCB.faceUp = false;
+
+            tCB.SetSortingLayerName(layout.drawPile.layerName);
+
+            tCB.SetSortOrder(-i * 4);
+
+            tCB.state = CBState.drawpile;
+        }
+    }
+
+    //Perform the initial game layout
+
+    void LayoutGame()
+    {
+        //Create an empty GameObject to serve as the tableau's anchor
+
+        if(layoutAnchor == null)
+        {
+            GameObject tGO = new GameObject("_LayoutAnchor");
+
+            layoutAnchor = tGO.transform;
+
+            layoutAnchor.transform.position = layoutCenter;
+        }
+        //Position the drawPile cards
+
+        ArrangeDrawPile();
+
+        //Set up the players
+        Player pl;
+
+        players = new List<Player>();
+
+        foreach (SlotDef tSD in layout.slotDefs)
+        {
+            pl = new Player();
+            pl.handSlotDef = tSD;
+            players.Add(pl);
+            pl.playerNum = tSD.player;
+        }
+        players[0].type = PlayerType.human;
+    }
+
+    //The Draw function will pull a single card from the drawPile and return it
+    public CardBartok Draw()
+    {
+        CardBartok cd = drawPile[0];
+        drawPile.RemoveAt(0);
+        return (cd);
+    }
+    //This Update() is temporarily used to test adding cards to players' hands
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            players[0].AddCard(Draw());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            players[1].AddCard(Draw());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            players[2].AddCard(Draw());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            players[3].AddCard(Draw());
+        }
     }
 }
