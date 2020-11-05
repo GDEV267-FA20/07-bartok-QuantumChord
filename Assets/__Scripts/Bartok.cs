@@ -214,6 +214,8 @@ public class Bartok : MonoBehaviour
 
         phase = TurnPhase.pre;
 
+        CURRENT_PLAYER.TakeTurn();
+
         //Report the turn passing
 
         Utils.tr("Bartok:PassTurn()", "Old: " + lastPlayerNum, "New: " +

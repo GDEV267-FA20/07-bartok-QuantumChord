@@ -57,6 +57,10 @@ public class CardBartok : Card
 
     public GameObject reportFinishTo = null;
 
+    [System.NonSerialized]
+
+    public Player callbackPlayer = null;
+
     public void MoveTo(Vector3 ePos, Quaternion eRot)
     {
         //Make new interpolation lists for the card
@@ -145,6 +149,14 @@ public class CardBartok : Card
                         reportFinishTo.SendMessage("CBCallback", this);
 
                         reportFinishTo = null;
+                    }
+
+                    else if(callbackPlayer != null)
+                    {
+                        //If there's a callback player, call CBCallback directly to the player
+                        callbackPlayer.CBCallback(this);
+
+                        callbackPlayer = null;
                     }
 
                     else
