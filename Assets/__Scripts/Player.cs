@@ -100,12 +100,18 @@ public class Player
 
             pos.z = -0.5f * i;
 
-            //Set the localPosition and rotation of the ith card in the hand
-            hand[i].transform.localPosition = pos;
+            //Set the localPosition and rotation of the ith card in the 
+            hand[i].MoveTo(pos, rotQ);
+
+            hand[i].state = CBState.toHand;
+
+            //After the move, CardBartok will set the state to CBState.hand
+
+            /*hand[i].transform.localPosition = pos;
 
             hand[i].transform.rotation = rotQ;
 
-            hand[i].state = CBState.hand;
+            hand[i].state = CBState.hand;*/
 
             hand[i].faceUp = (type == PlayerType.human);
 
