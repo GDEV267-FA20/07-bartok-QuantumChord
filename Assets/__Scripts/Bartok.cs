@@ -404,12 +404,21 @@ public class Bartok : MonoBehaviour
 
                     MoveToTarget(tCB);
 
-                    tCB.callbackPlayer = CURRENT_PLAYER;
+                    tCB.callbackPlayer = CURRENT_PLAYER;                        
 
                     Utils.tr("Bartok:CardClicked()", "Play", tCB.name,
                                         targetCard.name + " is target");
 
                     phase = TurnPhase.waiting;
+
+                    if (targetCard.rank == 2)
+                    {
+                        phase = TurnPhase.waiting;
+
+                        CURRENT_PLAYER.AddCard(Draw());
+
+                        PassTurn();
+                    }
                 }
 
                 else
@@ -422,30 +431,4 @@ public class Bartok : MonoBehaviour
                 break;
         }
     }
-
-/*
-    //This Update() is temporarily used to test adding cards to players' hands
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            players[0].AddCard(Draw());
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            players[1].AddCard(Draw());
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            players[2].AddCard(Draw());
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            players[3].AddCard(Draw());
-        }
-    }
-    */
 }
